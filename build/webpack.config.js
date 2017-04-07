@@ -2,6 +2,7 @@ var webpack = require('webpack');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var WebpackMd5Hash = require('webpack-md5-hash');
 var HashedModuleIdsPlugin = require('./HashedModuleIdsPlugin');
+var WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
 
 // 辅助函数
 var utils = require('./utils');
@@ -9,6 +10,9 @@ var fullPath  = utils.fullPath;
 var pickFiles = utils.pickFiles;
 var entries = utils.entries;
 var htmlGenerator = utils.htmlGenerator;
+
+var serverConfig = {assets:{ images: {extensions:['png']}}};
+var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(serverConfig);
 
 // 项目根路径
 var ROOT_PATH = fullPath('../');
@@ -97,7 +101,9 @@ var config = {
     // 使用 hash 作模块 ID，文件名作ID太长了，文件大小剧增
     new HashedModuleIdsPlugin(),
     // 根据文件内容生成 hash
-    new WebpackMd5Hash()
+    new WebpackMd5Hash(),
+
+    webpackIsomorphicToolsPlugin
   ]
 };
 
